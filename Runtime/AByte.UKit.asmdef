@@ -1,0 +1,19 @@
+{
+    "name": "AByte.UKit",
+    "rootNamespace": "AByte.UKit",
+    "references": [
+        "UniTask",
+        "UniRx",
+        "Unity.Timeline",
+        "Unity.TextMeshPro"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
