@@ -1,15 +1,8 @@
 
-using System.IO;
-using System.Reflection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using Sirenix.OdinInspector;
-using Sirenix.Serialization;
-using Sirenix.OdinInspector.Editor;
-using Sirenix.Utilities;
-using Sirenix.Utilities.Editor;
-using UnityEditor;
 using UnityEngine;
 
 namespace AByte.UKit
@@ -67,7 +60,6 @@ namespace AByte.UKit
         public MemberType memberType;
         public string valueType;
         public string ValueName;
-
         public string CombineID => $"{className}-{memberType}-{valueType}-{ValueName}";
 
     }
@@ -110,11 +102,7 @@ namespace AByte.UKit
             {
                 memberInfo = null; return;
             }
-
         }
-
-
-
 
         /// <summary>
         /// typeName类型过滤
@@ -149,7 +137,6 @@ namespace AByte.UKit
                     yield return propertyInfos[i].PropertyType.Name + "." + propertyInfos[i].Name;
                 }
             }
-
 
         }
 

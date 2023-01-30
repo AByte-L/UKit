@@ -28,7 +28,6 @@ namespace AByte.UKit.Editor
             EditorWin.findColl = Resources.Load<FindComponentColl>("FindComponentColl");
         }
         [Space, LabelText("配置文件"),InfoBox("需要自行创建并命名为“FindComponentColl”,且放置在Rerources下")] public FindComponentColl findColl;
-        //  public FindComponentItem AddItem;
 
 
         /************************************************************/
@@ -60,7 +59,6 @@ namespace AByte.UKit.Editor
                 return EditorGUILayout.TextField(label: item.ValueName, text: strValue);
             }
             return null;
-
         }
 
 
