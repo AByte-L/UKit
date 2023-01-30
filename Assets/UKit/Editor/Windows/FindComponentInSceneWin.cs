@@ -1,5 +1,4 @@
 #if UNITY_EDITOR
-using System.Net.Mime;
 using System.Reflection;
 using System;
 using System.Collections.Generic;
@@ -25,19 +24,19 @@ namespace AByte.UKit.Editor
         private static void Open()
         {
             var EditorWin = GetWindow<FindComponentInSceneWin>(title: "查找场景中组件");
-            EditorWin.position = GUIHelper.GetEditorWindowRect().AlignCenter(500, 200);
+            EditorWin.position = GUIHelper.GetEditorWindowRect().AlignCenter(400, 200);
             EditorWin.findColl = Resources.Load<FindComponentColl>("FindComponentColl");
         }
-
-        public FindComponentColl findColl;
+        [Space, LabelText("配置文件"),InfoBox("需要自行创建并命名为“FindComponentColl”,且放置在Rerources下")] public FindComponentColl findColl;
         //  public FindComponentItem AddItem;
 
 
         /************************************************************/
 
-        [LabelText("选择类型")]
-        [ValueDropdown("GetFilteredTypeList")]
+        [Space, LabelText("选择查找组件"), ValueDropdown("GetFilteredTypeList")]
         public string SelectedClass; //选择的类
+        [Space, CustomValueDrawer("strValueDraw")] public string strValue;
+        [CustomValueDrawer("intValueDraw")] public int intVlaue = 0;
 
         /// <summary>
         /// typeName类型过滤
@@ -45,36 +44,39 @@ namespace AByte.UKit.Editor
         /// <returns></returns>
         private IEnumerable<string> GetFilteredTypeList()
         {
-            return findColl.items.Select(x=> x.CombineID);
+            return findColl.items.Select(x => x.CombineID);
         }
 
-        string strValue = "";
-        int intVlaue = 0;
-        protected override void OnGUI()
+        public string strValueDraw(string value, GUIContent labe)
         {
-            base.OnGUI();
             //绘制属性
-            if (string.IsNullOrEmpty(SelectedClass)) return;
-            if (findColl == null) return;
-            if (findColl.items == null) return;
+            if (string.IsNullOrEmpty(SelectedClass)) return null;
+            if (findColl == null) return null;
+            if (findColl.items == null) return null;
             var item = GetSelectedItem();
-            if (item == null) return;
-            EditorGUILayout.BeginVertical();
+            if (item == null) return null;
             if (item.valueType == "String")
             {
-                strValue = EditorGUILayout.TextField(label: item.ValueName, text: strValue);
+                return EditorGUILayout.TextField(label: item.ValueName, text: strValue);
             }
-            else if (item.valueType == "Int32")
+            return null;
+
+        }
+
+
+        public int intValueDraw(int value, GUIContent labe)
+        {
+            //绘制属性
+            if (string.IsNullOrEmpty(SelectedClass)) return 0;
+            if (findColl == null) return 0;
+            if (findColl.items == null) return 0;
+            var item = GetSelectedItem();
+            if (item == null) return 0;
+            if (item.valueType == "Int32")
             {
-                intVlaue = EditorGUILayout.IntField(label: item.ValueName, value: intVlaue);
+                return EditorGUILayout.IntField(label: item.ValueName, value: intVlaue);
             }
-            EditorGUILayout.EndVertical();
-            GUILayout.BeginVertical();
-            if (GUILayout.Button("查找"))
-            {
-                Find();
-            }
-            GUILayout.EndVertical();
+            return 0;
 
         }
 
@@ -90,7 +92,7 @@ namespace AByte.UKit.Editor
             return null;
         }
 
-
+        [PropertySpace, ShowInInspector, Button(ButtonSizes.Medium)]
         private void Find()
         {
             var item = GetSelectedItem();
