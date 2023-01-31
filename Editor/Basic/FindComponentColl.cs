@@ -60,7 +60,7 @@ namespace AByte.UKit
         public MemberType memberType;
         public string valueType;
         public string ValueName;
-        public string CombineID => $"{className}-{memberType}-{valueType}-{ValueName}";
+        public string CombineID => $"{className}({ValueName})";
 
     }
 
