@@ -315,7 +315,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &629405754
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -329,7 +329,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: GG
-  Num: 1
+  Num: 12
 --- !u!4 &629405755
 Transform:
   m_ObjectHideFlags: 0
@@ -360,7 +360,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1793331584
 Transform:
   m_ObjectHideFlags: 0
@@ -388,4 +388,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: 33
-  Num: 0
+  Num: 12

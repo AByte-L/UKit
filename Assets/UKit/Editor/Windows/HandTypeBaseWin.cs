@@ -1,10 +1,6 @@
 #if UNITY_EDITOR
 
 using Sirenix.OdinInspector;
-using Sirenix.OdinInspector.Editor;
-using Sirenix.Utilities;
-using Sirenix.Utilities.Editor;
-using UnityEditor;
 using UnityEngine;
 
 namespace AByte.UKit.Editor
@@ -12,11 +8,9 @@ namespace AByte.UKit.Editor
 
     /*
      * 修改场景中选中对象的对象名称
-     * 需求，打开面板的时，选中车型资源文件，绘制数据
-     * 
      * 
      */
-    public class HandTypeBaseWin : OdinEditorWindow
+    public class HandTypeBaseWin : BaseWin
     {
 
         [LabelText("选择处理位置"), LabelWidth(120)]
@@ -125,25 +119,6 @@ namespace AByte.UKit.Editor
         }
         protected virtual void ReplaceCmd(string ori, string value)
         {
-        }
-
-        /**** 打印 *****/
-
-        /// <summary>
-        /// 提示信息
-        /// </summary>
-        /// <param name="info"></param>
-        protected void ShowMsg(string info)
-        {
-            Debug.Log(info);
-            this.ShowNotification(new GUIContent { text = info });
-
-        }
-        protected void ShowMsgWarning(string info)
-        {
-            Debug.LogWarning(info);
-            this.ShowNotification(new GUIContent { text = info });
-
         }
 
     }
