@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace AByte.UKit
+namespace AByte.UKit.Extensions
 {
 
     /// <summary>

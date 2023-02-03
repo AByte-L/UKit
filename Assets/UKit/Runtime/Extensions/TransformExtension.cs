@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace AByte.UKit
+namespace AByte.UKit.Extensions
 {
 
     public static class TransformExtension
