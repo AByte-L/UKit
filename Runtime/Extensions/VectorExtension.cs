@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace AByte.UKit
+namespace AByte.UKit.Extensions
 {
     public static class VectorExtension
     {

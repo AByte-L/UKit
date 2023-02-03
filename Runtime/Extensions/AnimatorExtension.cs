@@ -2,7 +2,7 @@ using Cysharp.Threading.Tasks;
 using System;
 using UnityEngine;
 
-namespace AByte.UKit
+namespace AByte.UKit.Extensions
 {
     /// <summary>
     /// Animator 扩展

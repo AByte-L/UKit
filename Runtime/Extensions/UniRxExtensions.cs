@@ -1,7 +1,7 @@
 using System;
 using UniRx;
 
-namespace AByte.UKit
+namespace AByte.UKit.Extensions
 {
 
     public static partial class UniRxExtensions
