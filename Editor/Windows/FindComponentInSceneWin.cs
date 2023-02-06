@@ -1,14 +1,16 @@
 #if UNITY_EDITOR
+using System.IO;
 using System.Reflection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using Sirenix.OdinInspector;
-using Sirenix.OdinInspector.Editor;
 using Sirenix.Utilities;
 using Sirenix.Utilities.Editor;
 using UnityEditor;
 using UnityEngine;
+using UnityEditor.SearchService;
+using AByte.UKit.Editor.Utilities;
 
 namespace AByte.UKit.Editor
 {
@@ -20,14 +22,19 @@ namespace AByte.UKit.Editor
      */
     public class FindComponentInSceneWin : BaseWin
     {
+
+        const string CONF_FILE_NAME = "组件收集器";
         [MenuItem("UKit/查找场景中组件")]
         private static void Open()
         {
             var EditorWin = GetWindow<FindComponentInSceneWin>(title: "查找场景中组件");
             EditorWin.position = GUIHelper.GetEditorWindowRect().AlignCenter(550, 320);
-            EditorWin.findColl = Resources.Load<FindComponentColl>("FindComponentColl");
+            EditorWin.Init();
         }
-        [Space, LabelText("配置文件"), InfoBox("“配置文件”需要自行创建并命名为“FindComponentColl”,且放置在Rerources下")] public FindComponentColl findColl;
+
+        //[InlineButton("CreateCollectConf", "创建") ] 自动创建
+        [InfoBox("请自行向“配置文件”中添加需要查找的组件")]
+        [Space, LabelText("配置文件"), ReadOnly] public FindComponentColl findColl;
 
 
         /************************************************************/
@@ -41,12 +48,25 @@ namespace AByte.UKit.Editor
         [PropertySpace(SpaceBefore = 0, SpaceAfter = 12), CustomValueDrawer("intValueDraw")] public int m_intVlaue = 0;
 
 
-        [PropertyOrder(10), HideLabel, PropertySpace(SpaceBefore = 10, SpaceAfter = 10), Multiline, GUIColor("$GetMsgColor"),ShowIf("@this.m_selectedComponentInfo!=null")] 
+        [PropertyOrder(10), HideLabel, PropertySpace(SpaceBefore = 10, SpaceAfter = 10), Multiline, GUIColor("$GetMsgColor"), ShowIf("@this.m_selectedComponentInfo!=null")]
         public string m_msg;
 
         List<UnityEngine.Object> findList = new List<UnityEngine.Object>();//找到组件的所有列表
         int showIndex = -1; //显示索引
         MsgType msgType;
+
+        //[EnableIf("@this.findColl!=null")]
+        public void Init()
+        {
+            findColl = (FindComponentColl)EditorGUIUtility.Load($"UKit/{CONF_FILE_NAME}.asset");
+            if (findColl == null)
+            {
+                var conf = ScriptableObject.CreateInstance<FindComponentColl>();
+                AssetDatabaseHelper.CreateAsset(conf, @$"Assets/Editor Default Resources/UKit", $"{CONF_FILE_NAME}.asset");//在传入的路径中创建资源
+                findColl = conf;
+            }
+
+        }
 
 
         private void OnValueChanged()
@@ -65,6 +85,8 @@ namespace AByte.UKit.Editor
         /// <returns></returns>
         private IEnumerable<string> GetFilteredTypeList()
         {
+            if (findColl == null) return null;
+            if (findColl.items == null) return null;
             return findColl.items.Select(x => x.CombineID);
         }
 
@@ -113,13 +135,13 @@ namespace AByte.UKit.Editor
         }
 
 
-        [ShowInInspector, ButtonGroup, Button(ButtonSizes.Medium),ShowIf("@this.m_selectedComponentInfo != null")]
+        [ShowInInspector, ButtonGroup, Button(ButtonSizes.Medium), ShowIf("@this.m_selectedComponentInfo != null")]
         private void Find()
         {
             showIndex = -1;
             findList.Clear();
             var item = GetSelectedItem();
-            if(item == null)return;
+            if (item == null) return;
             var assembly = Assembly.Load(item.AssemblyName);
             var type = assembly.GetType(item.className);
             var arr = UnityEngine.GameObject.FindObjectsOfType(type, includeInactive: m_includeInactive);
@@ -174,7 +196,7 @@ namespace AByte.UKit.Editor
             }
         }
 
-        [ShowInInspector, ButtonGroup, EnableIf("@this.findList.Count > 1"), LabelText("下一个"),ShowIf("@this.m_selectedComponentInfo != null")]
+        [ShowInInspector, ButtonGroup, EnableIf("@this.findList.Count > 1"), LabelText("下一个"), ShowIf("@this.m_selectedComponentInfo != null")]
         public void Next()
         {
             if (findList.Count < 2) return; //小于2就没得必要
