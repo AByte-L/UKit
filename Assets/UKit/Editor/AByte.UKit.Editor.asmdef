@@ -1,7 +1,9 @@
 {
     "name": "AByte.UKit.Editor",
     "rootNamespace": "",
-    "references": [],
+    "references": [
+        "Unity.Timeline"
+    ],
     "includePlatforms": [
         "Editor"
     ],
