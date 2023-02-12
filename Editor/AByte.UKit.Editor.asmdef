@@ -2,7 +2,8 @@
     "name": "AByte.UKit.Editor",
     "rootNamespace": "",
     "references": [
-        "Unity.Timeline"
+        "Unity.Timeline",
+        "YamlDotNet"
     ],
     "includePlatforms": [
         "Editor"

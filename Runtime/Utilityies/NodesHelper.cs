@@ -1,33 +1,27 @@
-using System.Collections;
 using System;
 using System.Collections.Generic;
-using System.IO;
-using Newtonsoft.Json;
-using UnityEngine;
-using UnityEngine.EventSystems;
-using UnityEngine.Networking;
-using UnityEngine.UI;
 
 namespace AByte.UKit.Utilities
 {
     public static class NodesHelper
     {
-        private IEnumerable<T> GetNodesByCondtion(List<T> nodes, Func<T, List<T>> GetChilds,  Func<T, bool> predicate)
+        //获取节点下，满足条件的所有节点，并返回
+        public static IEnumerable<T> GetNodesByCondtion<T>(IList<T> nodes, Func<T, IList<T>> GetChilds, Func<T, bool> predicate)
         {
+            if (nodes == null)
+                yield break;
             foreach (var item in nodes)
             {
-                if (ipredicate(item))
+                if (predicate(item))
                 {
-                    yield return item.Name;
+                    yield return item;
                 }
-                else
+                var subList = GetNodesByCondtion(GetChilds(item), GetChilds, predicate);
+                foreach (var sub in subList)
                 {
-                    var subList = GetNodesByCondtion(item.Childs,predicate);
-                    foreach (var sub in subList)
-                    {
-                        yield return sub;
-                    }
+                    yield return sub;
                 }
+
             }
         }
 
