@@ -103,7 +103,7 @@ namespace AByte.UKit.Editor
 
             }
             string info = $"共 {count} 个对象的名称被替换完成！";
-            ShowMsg(info);
+            ShowNotification(info);
         }
 
     }
