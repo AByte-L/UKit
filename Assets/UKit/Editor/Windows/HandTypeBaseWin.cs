@@ -100,7 +100,7 @@ namespace AByte.UKit.Editor
         protected bool HasSelectedObjects()
         {
             if (IsSelectedObject) return true;
-            ShowMsgWarning("未选中对象!");
+            ShowNotification_Warning("未选中对象!");
             return false;
 
         }

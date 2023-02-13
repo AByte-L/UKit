@@ -1,5 +1,4 @@
 #if UNITY_EDITOR
-using System.IO;
 using System.Reflection;
 using System;
 using System.Collections.Generic;
@@ -9,7 +8,6 @@ using Sirenix.Utilities;
 using Sirenix.Utilities.Editor;
 using UnityEditor;
 using UnityEngine;
-using UnityEditor.SearchService;
 using AByte.UKit.Editor.Utilities;
 
 namespace AByte.UKit.Editor
@@ -53,7 +51,14 @@ namespace AByte.UKit.Editor
 
         List<UnityEngine.Object> findList = new List<UnityEngine.Object>();//找到组件的所有列表
         int showIndex = -1; //显示索引
-        MsgType msgType;
+
+        protected override string Msg
+        {
+            get { return m_msg; }
+            set { m_msg = value; }
+
+        }
+
 
         //[EnableIf("@this.findColl!=null")]
         public void Init()
@@ -205,31 +210,6 @@ namespace AByte.UKit.Editor
             ShowMsgInfo(MsgType.Info, $"UKit:选中({showIndex + 1}/{findList.Count})");
         }
 
-        private void ShowMsgInfo(MsgType msgType, string msg)
-        {
-            this.msgType = msgType;
-            m_msg = msg;
-        }
-
-        private Color GetMsgColor()
-        {
-            Sirenix.Utilities.Editor.GUIHelper.RequestRepaint();
-            switch (msgType)
-            {
-                case MsgType.Info:
-                    // return Color.HSVToRGB(1, 1, 1);
-                    return Color.white;
-                case MsgType.Warning:
-                    return Color.yellow;
-                //return Color.HSVToRGB(1, 1, 0);
-                case MsgType.Error:
-                    return Color.red;
-                    //return Color.HSVToRGB(1, 0, 0);
-
-            }
-            return Color.HSVToRGB(1, 1, 1);
-            //return Color.HSVToRGB(Mathf.Cos((float)UnityEditor.EditorApplication.timeSinceStartup + 1f) * 0.225f + 0.325f, 1, 1);
-        }
     }
 }
 
