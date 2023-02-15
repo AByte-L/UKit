@@ -31,7 +31,7 @@ namespace AByte.UKit.Extensions
                 {
                     foreach (var item in excludeChildNames)
                     {
-                        if(item == deItem.name)
+                        if (item == deItem.name)
                         {
                             skip = true;
                             break;
@@ -105,5 +105,26 @@ namespace AByte.UKit.Extensions
             }
         }
 
+        /// <summary>
+        /// 更新列表中条目的序号
+        /// </summary>
+        /// <param name="parent"></param>
+        /// <param name="updateNo"></param>
+        /// <typeparam name="T"></typeparam>
+        public static void UpdateListItemNO<T>(this Transform parent, Action<T, int> updateNo) where T : MonoBehaviour
+        {
+            int no = 1;
+            for (int i = 0; i < parent.childCount; i++)
+            {
+                var trans = parent.GetChild(i);
+                if (trans.gameObject.activeSelf == false)
+                    continue;
+                T item = trans.GetComponent<T>();
+                if (item == null) continue;
+                updateNo(item, no);
+                no++;
+
+            }
+        }
     }
 }
