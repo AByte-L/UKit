@@ -2,6 +2,7 @@ using System.Collections;
 using System;
 using UnityEngine;
 using UnityEngine.Networking;
+using System.IO;
 
 namespace AByte.UKit.Utilities
 {
@@ -11,6 +12,29 @@ namespace AByte.UKit.Utilities
      */
     public static class LoadStreamingAssetsHelper
     {
+
+        /// <summary>
+        /// 使用UnityWebRequest请求时的地址（根据各个平台处理）
+        /// 注：这个路径不能使用File来使用
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <returns></returns>
+        public static string GetRequestURL(string fileName)
+        {
+
+            string path = Path.Combine(Application.streamingAssetsPath, fileName);
+
+#if UNITY_ANDROID && !UNITY_EDITOR
+            path ="jar:file://" + ptah;
+#elif UNITY_EIDITOR_OSX || UNITY_STANDALONE_OSX || UNITY_IPHONE //苹果下是这样
+            path ="file://"+ ptah;
+
+// #else // UNITY_EDITOR || UNITY_STANDALONE_WIN || UNITY_IPHONE 这些的路径一样
+//             request = new UnityWebRequest(Application.streamingAssetsPath + "/" + fileName);
+#endif
+            return path;
+        }
+
         /// <summary>
         /// 读取 StramingAssets 中的文本 
         /// </summary>
@@ -18,16 +42,7 @@ namespace AByte.UKit.Utilities
         /// <returns></returns>
         public static string LoadStramingAssetsText(string fileName)
         {
-            UnityWebRequest request;
-
-#if UNITY_ANDROID && !UNITY_EDITOR
-            // 安卓平台下的路径 安卓平台下读取StreamingAssets中的资源只能通过 UnityWebRequest 来读取， 以前是 www ，目前以弃用
-            // 安卓平台下 不能使用 System.IO 中的 方法
-            request = new UnityWebRequest("jar:file://" + Application.dataPath + "!/assets" + "/" + fileName);
-
-#else // UNITY_EDITOR || UNITY_STANDALONE_WIN || UNITY_IPHONE 这些的路径一样
-            request = new UnityWebRequest(Application.streamingAssetsPath + "/" + fileName);
-#endif
+            UnityWebRequest request = new UnityWebRequest(GetRequestURL(fileName));
             request.downloadHandler = new DownloadHandlerBuffer();
             request.SendWebRequest();
             while (!request.isDone) { }
@@ -42,16 +57,7 @@ namespace AByte.UKit.Utilities
         /// <returns></returns>
         public static IEnumerator LoadStramingAssetsTextAsync(string fileName, Action<string> callback)
         {
-            UnityWebRequest request;
-
-#if UNITY_ANDROID && !UNITY_EDITOR
-            // 安卓平台下的路径 安卓平台下读取StreamingAssets中的资源只能通过 UnityWebRequest 来读取， 以前是 www ，目前以弃用
-            // 安卓平台下 不能使用 System.IO 中的 方法
-            request = new UnityWebRequest("jar:file://" + Application.dataPath + "!/assets" + "/" + fileName);
-
-#else // UNITY_EDITOR || UNITY_STANDALONE_WIN || UNITY_IPHONE 这些的路径一样
-            request = new UnityWebRequest(Application.streamingAssetsPath + "/" + fileName);
-#endif
+            UnityWebRequest request = new UnityWebRequest(GetRequestURL(fileName));
             request.downloadHandler = new DownloadHandlerBuffer();
             request.SendWebRequest();
             while (!request.isDone)
