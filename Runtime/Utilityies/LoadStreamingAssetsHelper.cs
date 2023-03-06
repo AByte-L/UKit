@@ -14,12 +14,18 @@ namespace AByte.UKit.Utilities
     {
 
         /// <summary>
+        /// 方位StreamingAssets路径
+        /// File方式：           只有安卓端不支持，其他平台都支持，且路径都是Application.StreamingAssetsPath,不要在前面加前缀
+        /// UnityWebRequest方式：所有平台都支持，但是路径不一致
+        ///     win：   不加前缀
+        ///     安卓：   前缀："jar:file://"
+        ///     mac/ios：前缀："file://"
         /// 使用UnityWebRequest请求时的地址（根据各个平台处理）
         /// 注：这个路径不能使用File来使用
         /// </summary>
         /// <param name="fileName"></param>
         /// <returns></returns>
-        public static string GetRequestURL(string fileName)
+        public static string GetUWR_URL(string fileName)
         {
 
             string path = Path.Combine(Application.streamingAssetsPath, fileName);
@@ -28,9 +34,6 @@ namespace AByte.UKit.Utilities
             path ="jar:file://" + ptah;
 #elif UNITY_EIDITOR_OSX || UNITY_STANDALONE_OSX || UNITY_IPHONE //苹果下是这样
             path ="file://"+ ptah;
-
-// #else // UNITY_EDITOR || UNITY_STANDALONE_WIN || UNITY_IPHONE 这些的路径一样
-//             request = new UnityWebRequest(Application.streamingAssetsPath + "/" + fileName);
 #endif
             return path;
         }
@@ -40,31 +43,63 @@ namespace AByte.UKit.Utilities
         /// </summary>
         /// <param name="fileName">文件名称，包含扩展名</param>
         /// <returns></returns>
-        public static string LoadStramingAssetsText(string fileName)
+        public static string ReadCommon(string fileName)
         {
-            UnityWebRequest request = new UnityWebRequest(GetRequestURL(fileName));
+#if UNITY_ANDROID && !UNITY_EDITOR
+            return ReadByUWR(fileName);
+#else
+            ReadByFile(fileName);
+#endif
+            return null;
+
+        }
+
+        /// <summary>
+        /// 通过File的方式读取，【安卓端无效】
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <returns></returns>
+        public static string ReadByFile(string fileName)
+        {
+            string path = Path.Combine(Application.streamingAssetsPath, fileName);
+            return File.ReadAllText(path);
+
+        }
+
+        /// <summary>
+        /// 通过 UnityWebRequest 读取
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <returns></returns>
+        public static string ReadByUWR(string fileName)
+        {
+            UnityWebRequest request = new UnityWebRequest(GetUWR_URL(fileName));
             request.downloadHandler = new DownloadHandlerBuffer();
-            request.SendWebRequest();
+            var handle = request.SendWebRequest();
             while (!request.isDone) { }
             return request.downloadHandler.text;
         }
 
         /// <summary>
-        /// 读取 StramingAssets 中的文本 
+        /// 协程调用方式
         /// </summary>
         /// <param name="fileName">文件名称，包含扩展名</param>
         /// <param name="callback">读完回调</param>
         /// <returns></returns>
-        public static IEnumerator LoadStramingAssetsTextAsync(string fileName, Action<string> callback)
+        public static IEnumerator ReadByUWR(string fileName, Action<string> callback)
         {
-            UnityWebRequest request = new UnityWebRequest(GetRequestURL(fileName));
+            UnityWebRequest request = new UnityWebRequest(GetUWR_URL(fileName));
             request.downloadHandler = new DownloadHandlerBuffer();
-            request.SendWebRequest();
-            while (!request.isDone)
+            yield return request.SendWebRequest();
+            if (request.result == UnityWebRequest.Result.Success)
             {
-                yield return null;
+                callback?.Invoke(request.downloadHandler.text);
             }
-            callback?.Invoke(request.downloadHandler.text);
+            else
+            {
+                Debug.LogError(request.error);
+            }
+
         }
     }
 }
