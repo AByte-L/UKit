@@ -48,9 +48,8 @@ namespace AByte.UKit.Utilities
 #if UNITY_ANDROID && !UNITY_EDITOR
             return ReadByUWR(fileName);
 #else
-            ReadByFile(fileName);
+            return ReadByFile(fileName);
 #endif
-            return null;
 
         }
 
