@@ -86,7 +86,7 @@ namespace AByte.UKit.Utilities
         /// <param name="fileName">文件名称，包含扩展名</param>
         /// <param name="callback">读完回调</param>
         /// <returns></returns>
-        public static IEnumerator ReadByUWR(string fileName, Action<string> callback)
+        public static IEnumerator ReadByUWR_Coroutine(string fileName, Action<string> callback)
         {
             UnityWebRequest request = new UnityWebRequest(GetUWR_URL(fileName));
             request.downloadHandler = new DownloadHandlerBuffer();
@@ -100,6 +100,26 @@ namespace AByte.UKit.Utilities
                 Debug.LogError(request.error);
             }
 
+        }
+
+        /// <summary>
+        /// 协程调用方式
+        /// </summary>
+        /// <param name="fileName">文件名称，包含扩展名</param>
+        /// <param name="callback">读完回调</param>
+        /// <returns></returns>
+        public static void ReadByUWR(string fileName, Action<string> callback)
+        {
+            UnityWebRequest request = new UnityWebRequest(GetUWR_URL(fileName));
+            request.downloadHandler = new DownloadHandlerBuffer();
+            var op = request.SendWebRequest();
+            op.completed += _ =>
+            {
+                if (op.isDone)
+                    callback?.Invoke(request.downloadHandler.text);
+                else
+                    Debug.LogError(request.error);
+            };
         }
     }
 }
