@@ -31,9 +31,9 @@ namespace AByte.UKit.Utilities
             string path = Path.Combine(Application.streamingAssetsPath, fileName);
 
 #if UNITY_ANDROID && !UNITY_EDITOR
-            path ="jar:file://" + ptah;
+            path ="jar:file://" + path;
 #elif UNITY_EIDITOR_OSX || UNITY_STANDALONE_OSX || (UNITY_IPHONE&&!UNITY_EDITOR_WIN) //苹果下是这样
-            path ="file://"+ ptah;
+            path ="file://"+ path;
 #endif
             return path;
         }
