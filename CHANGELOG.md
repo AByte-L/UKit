@@ -42,8 +42,12 @@
 
 - 新增在windows 上打开 对话框选择文件和保存文件的功能
 
-
 ## [0.2.1] - 2023-03-08
+
+错误版本
+
+
+## [0.2.2] - 2023-03-08
 
 - 修复在mac和ios上读取StreamingAssets 路径错误问题
 - 完善了 StreamingAssetsHelper 工具的调用
