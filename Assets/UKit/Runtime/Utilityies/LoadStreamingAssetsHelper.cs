@@ -8,20 +8,20 @@ namespace AByte.UKit.Utilities
 {
 
     /*
-     * 文件夹工具 
+     * StreamingAssets文件夹下处理
+     * File方式：           只有安卓端不支持，其他平台都支持，且路径都是Application.StreamingAssetsPath,不要在前面加前缀
+     * UnityWebRequest方式：所有平台都支持，但是路径不一致
+        win：   不加前缀
+        安卓：   前缀："jar:file://"
+        mac/ios：前缀："file://"
+      使用UnityWebRequest请求时的地址（根据各个平台处理）
+      注：这个路径不能使用File来使用
      */
     public static class LoadStreamingAssetsHelper
     {
 
         /// <summary>
-        /// 方位StreamingAssets路径
-        /// File方式：           只有安卓端不支持，其他平台都支持，且路径都是Application.StreamingAssetsPath,不要在前面加前缀
-        /// UnityWebRequest方式：所有平台都支持，但是路径不一致
-        ///     win：   不加前缀
-        ///     安卓：   前缀："jar:file://"
-        ///     mac/ios：前缀："file://"
-        /// 使用UnityWebRequest请求时的地址（根据各个平台处理）
-        /// 注：这个路径不能使用File来使用
+        /// UnityWebRequest 访问地址
         /// </summary>
         /// <param name="fileName"></param>
         /// <returns></returns>
@@ -32,7 +32,7 @@ namespace AByte.UKit.Utilities
 
 #if UNITY_ANDROID && !UNITY_EDITOR
             path ="jar:file://" + ptah;
-#elif UNITY_EIDITOR_OSX || UNITY_STANDALONE_OSX || UNITY_IPHONE //苹果下是这样
+#elif UNITY_EIDITOR_OSX || UNITY_STANDALONE_OSX || (UNITY_IPHONE&&!UNITY_EDITOR_WIN) //苹果下是这样
             path ="file://"+ ptah;
 #endif
             return path;
@@ -43,7 +43,7 @@ namespace AByte.UKit.Utilities
         /// </summary>
         /// <param name="fileName">文件名称，包含扩展名</param>
         /// <returns></returns>
-        public static string ReadCommon(string fileName)
+        public static string ReadTextCommon(string fileName)
         {
 #if UNITY_ANDROID && !UNITY_EDITOR
             return ReadByUWR(fileName);
